@@ -6,7 +6,7 @@ on boot
 
 on enable-low-power
 # Disable SELinux for now
-	write /sys/fs/selinux/enforce 0
+#	write /sys/fs/selinux/enforce 0
 
 # Use Bootscripts from Franco Kernel
 	exec u:r:init:s0 root root -- /init.supolicy.sh
@@ -42,14 +42,14 @@ on enable-low-power
 
 # Enable input boost configuration
 	write /sys/module/cpu_boost/parameters/input_boost_freq "0:1171200"
-	write /sys/module/cpu_boost/parameters/input_boost_ms 1500
+	write /sys/module/cpu_boost/parameters/input_boost_ms 1000
 
 # VM tuning
-#	write /proc/sys/vm/dirty_background_ratio 20
-#	write /proc/sys/vm/dirty_expire_centisecs 200
-#	write /proc/sys/vm/dirty_ratio 40
-#	write /proc/sys/vm/swappiness 0
-#	write /proc/sys/vm/vfs_cache_pressure 100
+	write /proc/sys/vm/dirty_background_ratio 20
+	write /proc/sys/vm/dirty_expire_centisecs 200
+	write /proc/sys/vm/dirty_ratio 40
+	write /proc/sys/vm/swappiness 0
+	write /proc/sys/vm/vfs_cache_pressure 100
 
 # update cpusets now that boot is complete and we want better load balancing
 	write /dev/cpuset/top-app/cpus 0-7
