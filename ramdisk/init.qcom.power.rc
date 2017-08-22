@@ -1,0 +1,63 @@
+on boot
+# set default schedTune value for foreground/top-app (only affects EAS)
+	write /dev/stune/foreground/schedtune.prefer_idle 1
+	write /dev/stune/top-app/schedtune.prefer_idle 1
+	write /dev/stune/top-app/schedtune.boost 0
+
+on enable-low-power
+# Disable SELinux for now
+	write /sys/fs/selinux/enforce 0
+
+# Use Bootscripts from Franco Kernel
+	exec u:r:init:s0 root root -- /init.supolicy.sh
+	exec u:r:init:s0 root root -- /init.special_power.sh
+	exec u:r:supersu:s0 root root -- /init.supolicy.sh
+	exec u:r:supersu:s0 root root -- /init.special_power.sh
+
+# Enable Adaptive LMK
+	write /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk 1
+	write /sys/module/lowmemorykiller/parameters/minfree "18432,23040,27648,51256,150296,200640"
+	write /sys/module/lowmemorykiller/parameters/vmpressure_file_min 162500
+
+# Start IOP
+	start iop
+
+# Disable thermal bcl hotplug to switch governor
+	write /sys/module/msm_thermal/core_control/enabled 0
+
+# Online CPU4
+	write /sys/devices/system/cpu/cpu4/online 1
+
+# Will only work if using EAS
+	write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor "schedutil"
+	write /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor "schedutil"
+
+	write /sys/devices/system/cpu/cpu0/cpufreq/schedutil/up_rate_limit_us 500
+	write /sys/devices/system/cpu/cpu0/cpufreq/schedutil/down_rate_limit_us 10000
+	write /sys/devices/system/cpu/cpu4/cpufreq/schedutil/up_rate_limit_us 600
+	write /sys/devices/system/cpu/cpu4/cpufreq/schedutil/down_rate_limit_us 10000
+
+# Enable thermal bcl hotplug to switch governor
+	write /sys/module/msm_thermal/core_control/enabled 1
+
+# Enable input boost configuration
+	write /sys/module/cpu_boost/parameters/input_boost_freq "0:1171200"
+	write /sys/module/cpu_boost/parameters/input_boost_ms 1500
+
+# VM tuning
+#	write /proc/sys/vm/dirty_background_ratio 20
+#	write /proc/sys/vm/dirty_expire_centisecs 200
+#	write /proc/sys/vm/dirty_ratio 40
+#	write /proc/sys/vm/swappiness 0
+#	write /proc/sys/vm/vfs_cache_pressure 100
+
+# update cpusets now that boot is complete and we want better load balancing
+	write /dev/cpuset/top-app/cpus 0-7
+	write /dev/cpuset/foreground/boost/cpus 0-6
+	write /dev/cpuset/foreground/cpus 0-6
+	write /dev/cpuset/background/cpus 0-2
+	write /dev/cpuset/system-background/cpus 0-4
+
+
+on property:sys.boot_completed=1
+	trigger enable-low-power

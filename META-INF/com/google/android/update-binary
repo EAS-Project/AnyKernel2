@@ -47,7 +47,13 @@ $bb chmod -R 755 /tmp/anykernel/tools /tmp/anykernel/bin;
 
 ui_print "$(file_getprop /tmp/anykernel/anykernel.sh kernel.string)";
 ui_print " ";
+ui_print " ";
+ui_print "     RenderZenith for the OP5!";
+ui_print " ";
+ui_print " ";
+ui_print " ";
 ui_print "AnyKernel2 by osm0sis @ xda-developers";
+ui_print " ";
 ui_print " ";
 umount /system 2>/dev/null;
 mount -o ro -t auto /system;
@@ -89,6 +95,22 @@ if [ "$(file_getprop /tmp/anykernel/anykernel.sh do.modules)" == 1 ]; then
   set_perm_recursive 0 0 0755 0644 $root/system/lib/modules;
   chcon -R 'u:object_r:system_file:s0' $root/system/lib/modules;
   mount -o ro,remount -t auto /system;
+fi;
+
+if [ "$(file_getprop /tmp/anykernel/anykernel.sh do.system_blobs)" == 1 ]; then
+  ui_print "* Pushing System Blobs...";
+  ui_print " ";
+  mount -o remount,rw -t auto /system;
+  cp -rf /tmp/anykernel/system/etc/init.qcom.post_boot.sh /system/etc/init.qcom.post_boot.sh;
+  cp -rf /tmp/anykernel/system/lib/* /system/lib/;
+  cp -rf /tmp/anykernel/system/lib/hw/* /system/lib/hw/;
+  cp -rf /tmp/anykernel/system/lib64/* /system/lib64/;
+  cp -rf /tmp/anykernel/system/lib64/hw/* /system/lib64/hw/;
+  set_perm_recursive 0 0 0755 0755 /system/lib;
+  set_perm_recursive 0 0 0755 0755 /system/lib/hw;
+  set_perm_recursive 0 0 0755 0755 /system/lib64;
+  set_perm_recursive 0 0 0755 0755 /system/lib64/hw;
+  mount -o remount,ro -t auto /system;
 fi;
 
 case $(basename "$ZIPFILE" .zip) in
