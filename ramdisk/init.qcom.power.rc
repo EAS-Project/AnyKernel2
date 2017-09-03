@@ -25,9 +25,6 @@ on boot
 	write /dev/stune/top-app/schedtune.boost 0
 
 on enable-low-power
-# Disable SELinux for now
-#	write /sys/fs/selinux/enforce 0
-
 # Use Bootscripts from Franco Kernel
 	exec u:r:init:s0 root root -- /init.supolicy.sh
 	exec u:r:init:s0 root root -- /init.special_power.sh
