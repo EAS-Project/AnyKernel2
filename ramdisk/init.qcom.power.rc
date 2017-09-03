@@ -25,12 +25,6 @@ on boot
 	write /dev/stune/top-app/schedtune.boost 0
 
 on enable-low-power
-# Use Bootscripts from Franco Kernel
-	exec u:r:init:s0 root root -- /init.supolicy.sh
-	exec u:r:init:s0 root root -- /init.special_power.sh
-	exec u:r:supersu:s0 root root -- /init.supolicy.sh
-	exec u:r:supersu:s0 root root -- /init.special_power.sh
-
 # Enable Adaptive LMK
 	write /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk 1
 	write /sys/module/lowmemorykiller/parameters/minfree "18432,23040,27648,51256,150296,200640"
@@ -84,5 +78,12 @@ on enable-low-power
 	write /sys/block/sda/queue/iostats 1
 
 
+service special-power /system/bin/sh /init.special_power.sh
+	class late_start
+	user root
+	disabled
+	oneshot
+
 on property:sys.boot_completed=1
 	trigger enable-low-power
+	start special-power
