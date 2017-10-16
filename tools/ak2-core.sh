@@ -8,15 +8,6 @@ patch=/tmp/anykernel/patch;
 chmod -R 755 $bin;
 mkdir -p $ramdisk $split_img;
 
-if [ "$is_slot_device" == 1 ]; then
-  slot=$(getprop ro.boot.slot_suffix 2>/dev/null);
-  test ! "$slot" && slot=$(grep -o 'androidboot.slot_suffix=.*$' /proc/cmdline | cut -d\  -f1 | cut -d= -f2);
-  test "$slot" && block=$block$slot;
-  if [ $? != 0 -o ! -e "$block" ]; then
-    ui_print " "; ui_print "Unable to determine active boot slot. Aborting..."; exit 1;
-  fi;
-fi;
-
 OUTFD=/proc/self/fd/$1;
 
 # ui_print <text>
@@ -34,6 +25,11 @@ dump_boot() {
     $bin/nanddump -f /tmp/anykernel/boot.img $block;
   else
     dd if=$block of=/tmp/anykernel/boot.img;
+  fi;
+  if [ "$(strings /tmp/anykernel/boot.img | grep -E 'Green Loader|Green Recovery')" ]; then
+    mv -f /tmp/anykernel/boot.img /tmp/anykernel/boot-orig.img;
+    dd bs=1048576 count=1 conv=notrunc if=/tmp/anykernel/boot-orig.img of=$split_img/boot.img-master_boot.key;
+    dd bs=1048576 skip=1 conv=notrunc if=/tmp/anykernel/boot-orig.img of=/tmp/anykernel/boot.img;
   fi;
   if [ -f "$bin/unpackelf" -a "$($bin/unpackelf -i /tmp/anykernel/boot.img -h -q 2>/dev/null; echo $?)" == 0 ]; then
     $bin/unpackelf -i /tmp/anykernel/boot.img -o $split_img;
@@ -55,8 +51,10 @@ dump_boot() {
     else
       dumpfail=1;
     fi;
-  elif [ -f "$bin/pxa1088-unpackbootimg" ]; then
-    $bin/pxa1088-unpackbootimg -i /tmp/anykernel/boot.img -o $split_img;
+  elif [ -f "$bin/rkcrc" ]; then
+    dd bs=4096 skip=8 iflag=skip_bytes conv=notrunc if=/tmp/anykernel/boot.img of=$split_img/boot.img-ramdisk.gz;
+  elif [ -f "$bin/pxa-unpackbootimg" ]; then
+    $bin/pxa-unpackbootimg -i /tmp/anykernel/boot.img -o $split_img;
   else
     $bin/unpackbootimg -i /tmp/anykernel/boot.img -o $split_img;
   fi;
@@ -78,8 +76,9 @@ dump_boot() {
   fi;
   mv -f $ramdisk /tmp/anykernel/rdtmp;
   mkdir -p $ramdisk;
+  chmod 755 $ramdisk;
   cd $ramdisk;
-  gunzip -c $split_img/boot.img-ramdisk.gz | cpio -i;
+  gunzip -c $split_img/boot.img-ramdisk.gz | cpio -i -d;
   if [ $? != 0 -o -z "$(ls $ramdisk)" ]; then
     ui_print " "; ui_print "Unpacking ramdisk failed. Aborting..."; exit 1;
   fi;
@@ -173,8 +172,10 @@ write_boot() {
   fi;
   if [ -f "$bin/mkimage" ]; then
     $bin/mkimage -A $arch -O $os -T $type -C $comp -a $addr -e $ep -n "$name" -d $kernel:$ramdisk boot-new.img;
-  elif [ -f "$bin/pxa1088-mkbootimg" ]; then
-    $bin/pxa1088-mkbootimg --kernel $kernel --ramdisk ramdisk-new.cpio.gz $second --cmdline "$cmdline" --board "$board" --base $base --pagesize $pagesize --kernel_offset $kerneloff --ramdisk_offset $ramdiskoff $secondoff --tags_offset "$tagsoff" --unknown $unknown $dtb --output boot-new.img;
+  elif [ -f "$bin/rkcrc" ]; then
+    $bin/rkcrc -k ramdisk-new.cpio.gz boot-new.img;
+  elif [ -f "$bin/pxa-mkbootimg" ]; then
+    $bin/pxa-mkbootimg --kernel $kernel --ramdisk ramdisk-new.cpio.gz $second --cmdline "$cmdline" --board "$board" --base $base --pagesize $pagesize --kernel_offset $kerneloff --ramdisk_offset $ramdiskoff $secondoff --tags_offset "$tagsoff" --unknown $unknown $dtb --output boot-new.img;
   else
     $bin/mkbootimg --kernel $kernel --ramdisk ramdisk-new.cpio.gz $second --cmdline "$cmdline" --board "$board" --base $base --pagesize $pagesize --kernel_offset $kerneloff --ramdisk_offset $ramdiskoff $secondoff --tags_offset "$tagsoff" --os_version "$osver" --os_patch_level "$oslvl" $hash $dtb --output boot-new.img;
   fi;
@@ -226,7 +227,15 @@ write_boot() {
     fi;
   fi;
   if [ "$(strings /tmp/anykernel/boot.img | grep SEANDROIDENFORCE )" ]; then
-    printf 'SEANDROIDENFORCE' >> /tmp/anykernel/boot-new.img;
+    printf 'SEANDROIDENFORCE' >> boot-new.img;
+  fi;
+  if [ -f "$bin/dhtbsign" ]; then
+    $bin/dhtbsign -i boot-new.img -o boot-new-signed.img;
+    mv -f boot-new-signed.img boot-new.img;
+  fi;
+  if [ -f "$split_img/boot.img-master_boot.key" ]; then
+    cat $split_img/boot.img-master_boot.key boot-new.img > boot-new-signed.img;
+    mv -f boot-new-signed.img boot-new.img;
   fi;
   if [ -f "$bin/flash_erase" -a -f "$bin/nandwrite" ]; then
     $bin/flash_erase $block 0 0;
@@ -252,7 +261,7 @@ replace_section() {
   begin=`grep -n "$2" $1 | head -n1 | cut -d: -f1`;
   for end in `grep -n "$3" $1 | cut -d: -f1`; do
     if [ "$begin" -lt "$end" ]; then
-      if [ "$3" == " " ]; then
+      if [ "$3" == " " -o -z "$3" ]; then
         sed -i "/${2//\//\\/}/,/^\s*$/d" $1;
       else
         sed -i "/${2//\//\\/}/,/${3//\//\\/}/d" $1;
@@ -268,7 +277,7 @@ remove_section() {
   begin=`grep -n "$2" $1 | head -n1 | cut -d: -f1`;
   for end in `grep -n "$3" $1 | cut -d: -f1`; do
     if [ "$begin" -lt "$end" ]; then
-      if [ "$3" == " " ]; then
+      if [ "$3" == " " -o -z "$3" ]; then
         sed -i "/${2//\//\\/}/,/^\s*$/d" $1;
       else
         sed -i "/${2//\//\\/}/,/${3//\//\\/}/d" $1;
@@ -348,7 +357,7 @@ replace_file() {
 # patch_fstab <fstab file> <mount match name> <fs match type> <block|mount|fstype|options|flags> <original string> <replacement string>
 patch_fstab() {
   entry=$(grep "$2" $1 | grep "$3");
-  if [ -z "$(echo "$entry" | grep "$6")" ]; then
+  if [ -z "$(echo "$entry" | grep "$6")" -o "$6" == " " -o -z "$6" ]; then
     case $4 in
       block) part=$(echo "$entry" | awk '{ print $1 }');;
       mount) part=$(echo "$entry" | awk '{ print $2 }');;
@@ -356,7 +365,8 @@ patch_fstab() {
       options) part=$(echo "$entry" | awk '{ print $4 }');;
       flags) part=$(echo "$entry" | awk '{ print $5 }');;
     esac;
-    newentry=$(echo "$entry" | sed "s;${part};${6};");
+    newpart=$(echo "$part" | sed -e "s;${5};${6};" -e "s; ;;g" -e 's;,\{2,\};,;g' -e 's;,*$;;g' -e 's;^,;;g');
+    newentry=$(echo "$entry" | sed "s;${part};${newpart};");
     sed -i "s;${entry};${newentry};" $1;
   fi;
 }
@@ -382,6 +392,16 @@ patch_prop() {
     sed -i "${line}s;.*;${2}=${3};" $1;
   fi;
 }
+
+# slot detection enabled by is_slot_device=1 (from anykernel.sh)
+if [ "$is_slot_device" == 1 ]; then
+  slot=$(getprop ro.boot.slot_suffix 2>/dev/null);
+  test ! "$slot" && slot=$(grep -o 'androidboot.slot_suffix=.*$' /proc/cmdline | cut -d\  -f1 | cut -d= -f2);
+  test "$slot" && block=$block$slot;
+  if [ $? != 0 -o ! -e "$block" ]; then
+    ui_print " "; ui_print "Unable to determine active boot slot. Aborting..."; exit 1;
+  fi;
+fi;
 
 ## end methods
 
