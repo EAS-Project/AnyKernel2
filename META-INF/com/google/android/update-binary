@@ -48,7 +48,7 @@ $bb chmod -R 755 /tmp/anykernel/tools /tmp/anykernel/bin;
 ui_print "$(file_getprop /tmp/anykernel/anykernel.sh kernel.string)";
 ui_print " ";
 ui_print " ";
-ui_print "     RenderZenith for the OP5!";
+ui_print "     RenderZenith for the OP3!";
 ui_print " ";
 ui_print " ";
 ui_print " ";
