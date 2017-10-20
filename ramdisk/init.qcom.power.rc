@@ -52,7 +52,7 @@ on enable-low-power
 	write /sys/module/msm_thermal/core_control/enabled 1
 
 # Enable input boost configuration
-	write /sys/module/cpu_boost/parameters/input_boost_freq "0:1171200"
+	#write /sys/module/cpu_boost/parameters/input_boost_freq "0:1171200"
 	write /sys/module/cpu_boost/parameters/input_boost_ms 1000
 
 # VM tuning
@@ -71,6 +71,9 @@ on enable-low-power
 	write /dev/cpuset/foreground/cpus 0-3,6-7
 	write /dev/cpuset/background/cpus 0-1
 	write /dev/cpuset/system-background/cpus 0-3
+
+# Enable Dynamic Stune Boost
+        write /sys/module/cpu_boost/parameters/dynamic_stune_boost 15
 
 # end boot time fs tune
 	write /sys/block/sda/queue/read_ahead_kb 512
