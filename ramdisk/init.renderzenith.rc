@@ -57,8 +57,8 @@ on property:sys.post_boot.parsed=1
 #	write /sys/module/msm_thermal/core_control/enabled 1
 
 # Enable input boost configuration
-	write /sys/module/cpu_boost/parameters/input_boost_freq "0:1248000 1:0 2:0 3:0 4:0 5:0 6:0 7:0"
-	write /sys/module/cpu_boost/parameters/dynamic_stune_boost 25
+	write /sys/module/cpu_boost/parameters/input_boost_freq "0:1094400 1:0 2:0 3:0 4:1056000 5:0 6:0 7:0"
+	write /sys/module/cpu_boost/parameters/dynamic_stune_boost 50
 	write /sys/module/cpu_boost/parameters/input_boost_ms 1500
 
 # VM tuning
