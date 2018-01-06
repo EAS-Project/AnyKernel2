@@ -40,7 +40,7 @@ dump_boot;
 
 # init.rc
 backup_file init.rc
-insert_line init.rc "init.qcom.power.rc" after "import /init.environ.rc" "import /init.qcom.power.rc\n";
+insert_line init.rc "init.renderzenith.rc" after "import /init.environ.rc" "import /init.renderzenith.rc\n";
 
 # end ramdisk changes
 
