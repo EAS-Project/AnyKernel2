@@ -53,10 +53,6 @@ on property:sys.post_boot.parsed=1
 	write /sys/devices/system/cpu/cpu4/cpufreq/schedutil/up_rate_limit_us 500
 	write /sys/devices/system/cpu/cpu4/cpufreq/schedutil/down_rate_limit_us 20000
 
-	# Disable WALT and use PELT
-	write /proc/sys/kernel/sched_use_walt_cpu_util 0
-	write /proc/sys/kernel/sched_use_walt_task_util 0
-
 # Enable thermal bcl hotplug to switch governor
 #	write /sys/module/msm_thermal/core_control/enabled 1
 
