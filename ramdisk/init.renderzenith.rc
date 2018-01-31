@@ -59,7 +59,7 @@ on property:sys.post_boot.parsed=1
 # Enable input boost configuration
 	write /sys/module/cpu_boost/parameters/input_boost_freq "0:1036800 1:0 2:0 3:0 4:1056000 5:0 6:0 7:0"
 	write /sys/module/cpu_boost/parameters/dynamic_stune_boost 15
-	write /sys/module/cpu_boost/parameters/input_boost_ms 200
+	write /sys/module/cpu_boost/parameters/input_boost_ms 500
 
 # VM tuning
 #	write /proc/sys/vm/dirty_background_ratio 20
