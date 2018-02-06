@@ -86,3 +86,6 @@ on property:sys.post_boot.parsed=1
 	write /sys/block/sde/queue/nr_requests 128
 	write /sys/block/sde/queue/iostats 1 
 
+# Ensure minimum frequencies set to 300MHz
+	write /sys/devices/system/cpu/cpufreq/policy0/scaling_min_freq 300000
+	write /sys/devices/system/cpu/cpufreq/policy4/scaling_min_freq 300000
