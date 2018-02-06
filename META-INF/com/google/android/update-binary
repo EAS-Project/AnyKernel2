@@ -127,15 +127,10 @@ if [ "$(file_getprop /tmp/anykernel/anykernel.sh do.system_blobs)" == 1 ]; then
   ui_print "* Pushing System Blobs...";
   ui_print " ";
   mount -o remount,rw -t auto /system;
-  cp -rf /tmp/anykernel/system/etc/init.qcom.post_boot.sh /system/etc/init.qcom.post_boot.sh;
-  cp -rf /tmp/anykernel/system/lib/* /system/lib/;
-  cp -rf /tmp/anykernel/system/lib/hw/* /system/lib/hw/;
-  cp -rf /tmp/anykernel/system/lib64/* /system/lib64/;
-  cp -rf /tmp/anykernel/system/lib64/hw/* /system/lib64/hw/;
-  set_perm_recursive 0 0 0755 0755 /system/lib;
-  set_perm_recursive 0 0 0755 0755 /system/lib/hw;
-  set_perm_recursive 0 0 0755 0755 /system/lib64;
-  set_perm_recursive 0 0 0755 0755 /system/lib64/hw;
+  cp -rf /tmp/anykernel/system/vendor/etc/msm_irqbalance.conf /system/vendor/etc/msm_irqbalance.conf;
+  cp -rf /tmp/anykernel/system/vendor/etc/perf/perfboostsconfig.xml /system/vendor/etc/perf/perfboostsconfig.xml;
+  set_perm 0 0 0644 /system/vendor/etc/msm_irqbalance.conf;
+  set_perm 0 0 0644 /system/vendor/etc/perf/perfboostsconfig.xml;
   mount -o remount,ro -t auto /system;
 fi;
 
