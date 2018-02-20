@@ -44,11 +44,8 @@ insert_line init.rc "init.renderzenith.rc" after "import /init.environ.rc" "impo
 
 # Remove suspicious OnePlus services
 remove_section init.oem.rc "service OPNetlinkService" "seclabel"
-remove_section init.oem.rc "service wifisocket" "seclabel"
 remove_section init.oem.rc "service oemsysd" "seclabel"
 remove_section init.oem.rc "service oem_audio_device" "oneshot"
-remove_section init.oem.rc "service smartadjust" "seclabel"
-remove_section init.oem.rc "service atrace" "seclabel"
 remove_section init.oem.rc "service sniffer_set" "seclabel"
 remove_section init.oem.rc "service sniffer_start" "seclabel"
 remove_section init.oem.rc "service sniffer_stop" "seclabel"
