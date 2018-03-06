@@ -30,19 +30,8 @@ on boot
 	write /dev/stune/top-app/schedtune.boost 1
 
 on property:sys.post_boot.parsed=1
-# Enable Adaptive LMK
-#	write /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk 1
-#	write /sys/module/lowmemorykiller/parameters/minfree "18432,23040,27648,51256,150296,200640"
-#	write /sys/module/lowmemorykiller/parameters/vmpressure_file_min 162500
-
-# Start IOP
-#	start iop
-
-# Disable thermal bcl hotplug to switch governor
-#	write /sys/module/msm_thermal/core_control/enabled 0
-
-# Online CPU4
-#	write /sys/devices/system/cpu/cpu4/online 1
+# Adjust LMK Values
+	write /sys/module/lowmemorykiller/parameters/minfree "18432,23040,27648,32256,55296,80640"
 
 # Will only work if using EAS
 	write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor "schedutil"
@@ -50,23 +39,15 @@ on property:sys.post_boot.parsed=1
 
 	write /sys/devices/system/cpu/cpu0/cpufreq/schedutil/up_rate_limit_us 500
 	write /sys/devices/system/cpu/cpu0/cpufreq/schedutil/down_rate_limit_us 20000
+	write /sys/devices/system/cpu/cpu0/cpufreq/schedutil/iowait_boost_enable 1
 	write /sys/devices/system/cpu/cpu4/cpufreq/schedutil/up_rate_limit_us 500
 	write /sys/devices/system/cpu/cpu4/cpufreq/schedutil/down_rate_limit_us 20000
-
-# Enable thermal bcl hotplug to switch governor
-#	write /sys/module/msm_thermal/core_control/enabled 1
+	write /sys/devices/system/cpu/cpu4/cpufreq/schedutil/iowait_boost_enable 1
 
 # Enable input boost configuration
-	write /sys/module/cpu_boost/parameters/input_boost_freq "0:1036800 1:0 2:0 3:0 4:1056000 5:0 6:0 7:0"
+	write /sys/module/cpu_boost/parameters/input_boost_freq "0:1036800"
 	write /sys/module/cpu_boost/parameters/dynamic_stune_boost 15
 	write /sys/module/cpu_boost/parameters/input_boost_ms 500
-
-# VM tuning
-#	write /proc/sys/vm/dirty_background_ratio 20
-#	write /proc/sys/vm/dirty_expire_centisecs 200
-#	write /proc/sys/vm/dirty_ratio 40
-#	write /proc/sys/vm/swappiness 0
-#	write /proc/sys/vm/vfs_cache_pressure 100
 
 # MISC
 	write /sys/sweep2sleep/sweep2sleep 0
@@ -85,7 +66,3 @@ on property:sys.post_boot.parsed=1
 	write /sys/block/sde/queue/read_ahead_kb 512
 	write /sys/block/sde/queue/nr_requests 128
 	write /sys/block/sde/queue/iostats 1 
-
-# Ensure minimum frequencies set to 300MHz
-	write /sys/devices/system/cpu/cpufreq/policy0/scaling_min_freq 300000
-	write /sys/devices/system/cpu/cpufreq/policy4/scaling_min_freq 300000
