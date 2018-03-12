@@ -72,7 +72,7 @@ __"block|mount|fstype|options|flags"__ requires you specify which part (listed i
 
 _dump_boot_ and _write_boot_ are the default method of unpacking/repacking, but for more granular control, or omitting ramdisk changes entirely ("OG AK" mode), these can be separated into _split_boot; unpack_ramdisk_ and _repack_ramdisk; flash_boot_ respectively.
 
-You may also use _ui_print "\<text\>"_ to write messages back to the recovery during the modification process, and _contains "\<string\>" "\<substring\>"_ to simplify string testing logic you might want in your script.
+You may also use _ui_print "\<text\>"_ to write messages back to the recovery during the modification process, and _file_getprop "\<file\>" "\<property\>"_ and _contains "\<string\>" "\<substring\>"_ to simplify string testing logic you might want in your script.
 
 ## // Binary Inclusion ##
 
@@ -107,7 +107,7 @@ Optional supported binaries which may be placed in /tools to enable built-in exp
 
 3. Place any required patch files (generally partial files which go with commands) in /patch
 
-4. Modify the anykernel.sh to add your kernel's name, boot partition location, permissions for included ramdisk files, and use methods for any required ramdisk modifications
+4. Modify the anykernel.sh to add your kernel's name, boot partition location, permissions for included ramdisk files, and use methods for any required ramdisk modifications (optionally, also place banner and/or version files in the root to have these displayed during flash)
 
 5. `zip -r9 UPDATE-AnyKernel2.zip * -x README UPDATE-AnyKernel2.zip`
 
