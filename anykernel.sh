@@ -37,6 +37,7 @@ chown -R root:root $ramdisk/*;
 dump_boot;
 
 # begin ramdisk changes
+mount -o remount,rw -t auto /system;
 
 # init.rc
 backup_file init.rc
@@ -54,7 +55,11 @@ remove_section init.oem.debug.rc "service oemlogkit" "socket oemlogkit"
 remove_section init.oem.debug.rc "service dumpstate_log" "seclabel"
 remove_section init.oem.debug.rc "service oemasserttip" "disabled"
 
+# Remove packet filtering from WCNSS_qcom_cfg.ini
+remove_line /system/vendor/etc/wifi/WCNSS_qcom_cfg.ini g_enable_packet_filter_bitmap
+
 # end ramdisk changes
+mount -o remount,ro -t auto /system;
 
 write_boot;
 
