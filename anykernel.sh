@@ -87,6 +87,9 @@ remove_section init.oem.debug.rc "service oemasserttip" "disabled"
 # Remove packet filtering from WCNSS_qcom_cfg.ini
 cp -pf /system/vendor/etc/wifi/WCNSS_qcom_cfg.ini $ramdisk/WCNSS_qcom_cfg.ini
 remove_line WCNSS_qcom_cfg.ini g_enable_packet_filter_bitmap
+echo "gDisablePacketFilter=1" > $ramdisk/temp.ini
+cat $ramdisk/WCNSS_qcom_cfg.ini >> $ramdisk/temp.ini
+mv $ramdisk/temp.ini $ramdisk/WCNSS_qcom_cfg.ini
 
 # end ramdisk changes
 
