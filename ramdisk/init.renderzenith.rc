@@ -82,3 +82,7 @@ on property:sys.post_boot.parsed=1
 	write /sys/block/sde/queue/read_ahead_kb 512
 	write /sys/block/sde/queue/nr_requests 128
 	write /sys/block/sde/queue/iostats 1 
+
+	# Toggle Sched Features
+	write /sys/kernel/debug/sched_features "NO_FBT_STRICT_ORDER"
+
