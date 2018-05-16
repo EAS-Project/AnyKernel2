@@ -6,7 +6,7 @@
 properties() {
 kernel.string=RenderZenith kernel for OP3
 do.devicecheck=1
-do.modules=0
+do.modules=1
 do.cleanup=1
 do.cleanuponabort=0
 device.name1=OnePlus3
@@ -36,7 +36,7 @@ chown -R root:root $ramdisk/*;
 dump_boot;
 
 # begin ramdisk changes
-
+insert_line init.rc "init.renderzenith.rc" after "import /init.environ.rc" "import /init.renderzenith.rc\n";
 # end ramdisk changes
 
 write_boot;
