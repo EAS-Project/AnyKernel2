@@ -26,3 +26,6 @@ on property:sys.post_boot.parsed=1
     write /sys/module/cpu_boost/parameters/input_boost_freq "0:1036800 2:0"
     write /sys/module/cpu_boost/parameters/dynamic_stune_boost 15
     write /sys/module/cpu_boost/parameters/input_boost_ms 175
+
+    # Start msm_irqbalance
+    start vendor.msm_irqbalance
