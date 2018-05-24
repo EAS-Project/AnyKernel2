@@ -91,6 +91,9 @@ echo "gDisablePacketFilter=1" > $ramdisk/temp.ini
 cat $ramdisk/WCNSS_qcom_cfg.ini >> $ramdisk/temp.ini
 mv $ramdisk/temp.ini $ramdisk/WCNSS_qcom_cfg.ini
 
+# Remove 
+replace_line $ramdisk/WCNSS_qcom_cfg.ini "gHwFilterMode" "gHwFilterMode=0"
+
 # end ramdisk changes
 
 write_boot;
