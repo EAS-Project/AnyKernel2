@@ -9,7 +9,6 @@ do.devicecheck=1
 do.modules=0
 do.cleanup=1
 do.cleanuponabort=0
-do.system_blobs=0
 device.name1=OnePlus5T
 device.name2=dumpling
 device.name3=OnePlus5

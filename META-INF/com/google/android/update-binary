@@ -143,17 +143,6 @@ if [ "$(file_getprop /tmp/anykernel/anykernel.sh do.modules)" == 1 ]; then
   mount -o ro,remount -t auto /vendor 2>/dev/null;
 fi;
 
-if [ "$(file_getprop /tmp/anykernel/anykernel.sh do.system_blobs)" == 1 ]; then
-  ui_print " ";
-  ui_print "Pushing System Blobs...";
-  mount -o remount,rw -t auto /system;
-  cp -rf /tmp/anykernel/system/vendor/etc/msm_irqbalance.conf /system/vendor/etc/msm_irqbalance.conf;
-  cp -rf /tmp/anykernel/system/vendor/etc/perf/perfboostsconfig.xml /system/vendor/etc/perf/perfboostsconfig.xml;
-  set_perm 0 0 0644 /system/vendor/etc/msm_irqbalance.conf;
-  set_perm 0 0 0644 /system/vendor/etc/perf/perfboostsconfig.xml;
-  mount -o remount,ro -t auto /system;
-fi;
-
 debugging;
 
 if [ "$(file_getprop /tmp/anykernel/anykernel.sh do.cleanup)" == 1 ]; then
