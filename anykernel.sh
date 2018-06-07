@@ -31,6 +31,17 @@ ramdisk_compression=auto;
 chmod -R 750 $ramdisk/*;
 chown -R root:root $ramdisk/*;
 
+# Begin system changes
+mount -o remount,rw -t auto /system;
+
+restore_file /system/vendor/etc/perf/perfboostsconfig.xml
+backup_file /system/vendor/etc/perf/perfboostsconfig.xml
+cp -rf /tmp/anykernel/system/vendor/etc/perf/perfboostsconfig.xml /system/vendor/etc/perf/perfboostsconfig.xml;
+set_perm 0 0 0644 /system/vendor/etc/perf/perfboostsconfig.xml;
+chcon "u:object_r:vendor_configs_files:s0" /system/vendor/etc/perf/perfboostsconfig.xml
+
+mount -o remount,ro -t auto /system;
+# End system changes
 
 ## AnyKernel install
 dump_boot;
