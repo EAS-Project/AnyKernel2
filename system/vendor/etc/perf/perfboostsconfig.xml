@@ -16,6 +16,7 @@
     <PerfBoost>
 
     <!--app lauch boost-->
+        <!-- SCHEDBOOST resource opcode, value-->
         <!-- CPUBOOST_MAX_FREQ BIG Core resource opcode, value-->
         <!-- CPUBOOST_MAX_FREQ LITTLE Core resource opcode, value-->
         <!-- CPUBOOST_MIN_FREQ BIG Core resource opcode, value-->
@@ -27,7 +28,7 @@
         <!-- Type="1", main launch boost of 2sec -->
         <Config
             Id="0x00001081" Type="1" Enable="true" Timeout="2000" Target="msm8996"
-            Resources="0x40804000, 0xFFF, 0x40804100, 0xFFF, 0x40800000, 1500,
+            Resources="0x40C00000, 0x1, 0x40804000, 0xFFF, 0x40804100, 0xFFF, 0x40800000, 1500,
                        0x40800100, 1500, 0x41800000, 140, 0x40400000, 0x1, 0x42C10000, 0x1" />
 
     <!--app lauch boost (disabling packing)-->
@@ -45,14 +46,17 @@
             Resources="" />
 
     <!--Vertical Scroll boost-->
+        <!-- CPUBW_MIN_FREQ resource opcode, value-->
         <!-- CPUBOOST_MIN_FREQ BIG CORE resource opcode, value -->
         <!-- CPUBOOST_MIN_FREQ LITTLE Core resource opcode, value -->
-        <!-- CPUBW_MIN_FREQ resource opcode, value-->
+        <!-- SCHEDBOOST resource opcode, value-->
+        <!-- SCHEDGROUP resource opcode, value-->
 
         <!-- Type="1", Vertical Scroll boost -->
         <Config
             Id="0x00001080" Type="1" Enable="true" Target="msm8996"
-            Resources="0x40800000, 1000, 0x40800100, 1000, 0x41800000, 0x33" />
+            Resources="0x41800000, 0x33, 0x40800000, 1000, 0x40800100, 1000, 0x40C00000, 0x1,
+                       0x40C28000, 0x1" />
 
     <!--Horizontal Scroll boost-->
         <!-- SCHEDBOOST resource opcode, value-->
@@ -60,6 +64,7 @@
         <!-- Type="2", Horizontal Scroll boost -->
         <Config
             Id="0x00001080" Type="2" Enable="true" Target="msm8996"
-            Resources="0x40800000, 1000, 0x40800100, 1000, 0x41800000, 0x33" />
+            Resources="0x40C00000, 0x1" />
     </PerfBoost>
 </BoostConfigs>
+
