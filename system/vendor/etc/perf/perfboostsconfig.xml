@@ -16,6 +16,7 @@
     <PerfBoost>
 
     <!--app lauch boost-->
+        <!-- SCHEDBOOST resource opcode, value-->
         <!-- CPUBOOST_MAX_FREQ BIG Core resource opcode, value-->
         <!-- CPUBOOST_MAX_FREQ LITTLE Core resource opcode, value-->
         <!-- CPUBOOST_MIN_FREQ BIG Core resource opcode, value-->
@@ -27,7 +28,7 @@
         <!-- Type="1", main launch boost of 2sec -->
         <Config
             Id="0x00001081" Type="1" Enable="true" Timeout="2000" Target="msm8998"
-            Resources="0x40804000, 0x939, 0x40804100, 0xFFF, 0x40800000, 0xFFF,
+            Resources="0x40C00000, 0x1, 0x40804000, 0x939, 0x40804100, 0xFFF, 0x40800000, 0xFFF,
                        0x40800100, 0xFFF, 0x41800000, 140, 0x40400000, 0x1, 0x42C10000, 0x1" />
 
     <!--app lauch boost (disabling packing)-->
@@ -37,7 +38,16 @@
             Id="0x00001081" Type="2" Enable="false" Timeout="1500" Target="msm8998"
             Resources="" />
 
+    <!-- config_enableLaunchBoostv2-->
+        <!-- SCHEDBOOST resource opcode, value-->
+
+        <!-- Type="3", FA launch boost of 15sec -->
+        <Config
+            Id="0x00001081" Type="3" Enable="true" Timeout="15000" Target="msm8998"
+            Resources="0x40C00000, 0x3" />
+
     <!-- config_enableLaunchBoostv4-->
+        <!-- SCHEDBOOST resource opcode, value-->
         <!-- MPCTLV3_L2_MEMLAT_RATIO_CEIL_0 resource opcode, value-->
         <!-- MPCTLV3_L2_MEMLAT_RATIO_CEIL_1 resource opcode, value-->
         <!-- MPCTLV3_LPM_LEVELS_REF_STDDEV resource opcode, value-->
@@ -46,28 +56,50 @@
         <!-- Type="4", Adaptive Launch boost -->
         <Config
             Id="0x00001081" Type="4" Enable="true" Timeout="2000" Target="msm8998"
-            Resources="0x43404000, 0x2710, 0x43408000, 0x2710,
-                                  0x4040C000, 0x1F4, 0x40410000, 0x3E8" />
+            Resources="0x40C00000, 0x2,
+                       0x43404000, 0x2710, 0x43408000, 0x2710,
+                       0x4040C000, 0x1F4, 0x40410000, 0x3E8" />
 
     <!--Vertical Scroll boost-->
         <!-- CPUBW_MIN_FREQ resource opcode, value-->
         <!-- CPUBOOST_MIN_FREQ BIG CORE resource opcode, value -->
         <!-- CPUBOOST_MIN_FREQ LITTLE Core resource opcode, value -->
+        <!-- SCHEDBOOST resource opcode, value-->
 
         <!-- Type="1", Vertical Scroll boost -->
         <Config
             Id="0x00001080" Type="1" Enable="true" Target="msm8998"
-            Resources="0x41800000, 0x33, 0x40800000, 1000, 0x40800100, 1000" />
+            Resources="0x41800000, 0x33, 0x40800000, 1000, 0x40800100, 1000, 0x40C00000, 0x2" />
+
+    <!--Horizontal Scroll boost-->
+        <!-- SCHEDBOOST resource opcode, value-->
+
+        <!-- Type="2", Horizontal Scroll boost -->
+        <Config
+            Id="0x00001080" Type="2" Enable="true" Target="msm8998"
+            Resources="0x40C00000, 0x2" />
 
     <!--Pre-Fling boost-->
         <!-- CPUBW_MIN_FREQ resource opcode, value-->
         <!-- CPUBOOST_MIN_FREQ BIG CORE resource opcode, value -->
         <!-- CPUBOOST_MIN_FREQ LITTLE Core resource opcode, value -->
+        <!-- SCHEDBOOST resource opcode, value-->
 
         <!-- Type="4", Pre-Fling boost -->
         <Config
             Id="0x00001080" Type="4" Enable="true" Timeout="80" Target="msm8998"
-            Resources="0x41800000, 0x33, 0x40800000, 1000, 0x40800100, 1000" />
+            Resources="0x41800000, 0x33, 0x40800000, 1000, 0x40800100, 1000, 0x40C00000, 0x2" />
+
+    <!--Drag boost-->
+        <!-- LLCBW_MIN_FREQ resource opcode, value-->
+        <!-- CPUBOOST_MIN_FREQ BIG CORE resource opcode, value -->
+        <!-- CPUBOOST_MIN_FREQ LITTLE Core resource opcode, value -->
+        <!-- SCHEDBOOST resource opcode, value-->
+
+        <!-- Type="1", Drag boost -->
+        <Config
+            Id="0x00001087" Type="1" Enable="true" Timeout="0" Target="msm8998"
+            Resources="0x43000000, 0x11, 0x40800000, 1300, 0x40800100, 1000, 0x40C00000, 0x2" />
 
     <!--PackageInstall boost-->
         <!-- SCHEDBOOST resource opcode, value-->
@@ -79,6 +111,7 @@
 
         <Config
             Id="0x00001088" Enable="true" Target="msm8998"
-            Resources="0x40804000, 0xFFF, 0x40804100, 0xFFF, 0x40800000,0xFFF, 0x40800100,0xFFF" />
+            Resources="0x40C00000, 0x1, 0x40804000, 0xFFF, 0x40804100, 0xFFF, 0x40800000,0xFFF,
+                       0x40800100,0xFFF" />
     </PerfBoost>
 </BoostConfigs>
