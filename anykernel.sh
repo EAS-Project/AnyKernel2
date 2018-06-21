@@ -60,7 +60,7 @@ $bin/sepolicy-inject -s hal_perf_default -t rootfs -c file -p getattr,read,open 
 
 # sepolicy_debug
 $bin/sepolicy-inject -s init -t rootfs -c file -p execute_no_trans -P sepolicy_debug;
-$bin/sepolicy-inject -s init -t rootfs -c system -p module_load -P sepolicy_deb,ug;
+$bin/sepolicy-inject -s init -t rootfs -c system -p module_load -P sepolicy_debug;
 $bin/sepolicy-inject -s init -t system_file -c file -p mounton -P sepolicy_debug;
 $bin/sepolicy-inject -s init -t vendor_configs_file -c file -p mounton -P sepolicy_debug;
 $bin/sepolicy-inject -s init -t vendor_file -c file -p mounton -P sepolicy_debug;
