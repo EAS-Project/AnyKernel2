@@ -1,9 +1,9 @@
 on init
     # set default schedTune value for foreground/top-app (only affects EAS)
     write /dev/stune/foreground/schedtune.prefer_idle 1
-    write /dev/stune/top-app/schedtune.boost 1
+    write /dev/stune/top-app/schedtune.boost 0
     write /dev/stune/top-app/schedtune.prefer_idle 1
-    write /dev/stune/top-app/schedtune.dynamic_boost 0
+    write /dev/stune/top-app/schedtune.dynamic_boost 1
     write /dev/stune/rt/schedtune.boost 0
     write /dev/stune/rt/schedtune.prefer_idle 1
 
@@ -27,8 +27,8 @@ on property:sys.post_boot.parsed=1
 
     # Enable input boost configuration
     write /sys/module/cpu_boost/parameters/input_boost_freq "0:1036800 2:0"
-    write /sys/module/cpu_boost/parameters/dynamic_stune_boost 15
-    write /sys/module/cpu_boost/parameters/input_boost_ms 175
+    write /sys/module/cpu_boost/parameters/dynamic_stune_boost 1
+    write /sys/module/cpu_boost/parameters/input_boost_ms 100
 
 service msm_irqbalance /vendor/bin/msm_irqbalance -f /vendor/etc/msm_irqbalance.conf
     socket msm_irqbalance seqpacket 660 root system
