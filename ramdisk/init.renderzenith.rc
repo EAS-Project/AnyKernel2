@@ -7,7 +7,7 @@ on init
     write /dev/stune/rt/schedtune.boost 0
     write /dev/stune/rt/schedtune.prefer_idle 1
 
-on boot
+on post-fs-data
     # Bind mount modules and custom system blobs
     mount auto /perfboostsconfig.xml /system/vendor/etc/perf/perfboostsconfig.xml bind
     mount auto /modules/system/lib/modules/ansi_cprng.ko /system/lib/modules/ansi_cprng.ko bind
