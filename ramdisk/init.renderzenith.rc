@@ -7,6 +7,20 @@ on init
     write /dev/stune/rt/schedtune.boost 0
     write /dev/stune/rt/schedtune.prefer_idle 1
 
+on boot
+    # Bind mount modules and custom system blobs
+    mount auto /perfboostsconfig.xml /system/vendor/etc/perf/perfboostsconfig.xml bind
+    mount auto /modules/system/lib/modules/ansi_cprng.ko /system/lib/modules/ansi_cprng.ko bind
+    mount auto /modules/system/lib/modules/backlight.ko /system/lib/modules/backlight.ko bind
+    mount auto /modules/system/lib/modules/br_netfilter.ko /system/lib/modules/br_netfilter.ko bind
+    mount auto /modules/system/lib/modules/evbug.ko /system/lib/modules/evbug.ko bind
+    mount auto /modules/system/lib/modules/generic_bl.ko /system/lib/modules/generic_bl.ko bind
+    mount auto /modules/system/lib/modules/lcd.ko /system/lib/modules/lcd.ko bind
+    mount auto /modules/system/lib/modules/rdbg.ko /system/lib/modules/rdbg.ko bind
+    mount auto /modules/system/lib/modules/spidev.ko /system/lib/modules/spidev.ko bind
+    mount auto /modules/system/lib/modules/wil6210.ko /system/lib/modules/wil6210.ko bind
+    mount auto /modules/system/lib/modules/wlan.ko /system/lib/modules/qca_cld/qca_cld_wlan.ko bind
+
 on property:sys.post_boot.parsed=1
     # update cpusets now that boot is complete and we want better load balancing
     write /dev/cpuset/top-app/cpus 0-3

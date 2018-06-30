@@ -6,7 +6,7 @@
 properties() {
 kernel.string=RenderZenith kernel for OP3
 do.devicecheck=1
-do.modules=1
+do.modules=0
 do.cleanup=1
 do.cleanuponabort=0
 device.name1=OnePlus3
@@ -31,23 +31,35 @@ ramdisk_compression=auto;
 chmod -R 750 $ramdisk/*;
 chown -R root:root $ramdisk/*;
 
-# Begin system changes
-mount -o remount,rw -t auto /system;
-
-restore_file /system/vendor/etc/perf/perfboostsconfig.xml
-backup_file /system/vendor/etc/perf/perfboostsconfig.xml
-cp -rf /tmp/anykernel/system/vendor/etc/perf/perfboostsconfig.xml /system/vendor/etc/perf/perfboostsconfig.xml;
-set_perm 0 0 0644 /system/vendor/etc/perf/perfboostsconfig.xml;
-chcon "u:object_r:vendor_configs_file:s0" /system/vendor/etc/perf/perfboostsconfig.xml
-
-mount -o remount,ro -t auto /system;
-# End system changes
-
 ## AnyKernel install
 dump_boot;
 
 # begin ramdisk changes
 insert_line init.rc "init.renderzenith.rc" after "import /init.environ.rc" "import /init.renderzenith.rc\n";
+
+# sepolicy
+$bin/sepolicy-inject -s init -t rootfs -c file -p execute_no_trans,mounton -P sepolicy;
+$bin/sepolicy-inject -s init -t rootfs -c system -p module_load -P sepolicy;
+$bin/sepolicy-inject -s init -t system_file -c file -p mounton -P sepolicy;
+$bin/sepolicy-inject -s init -t vendor_configs_file -c file -p mounton -P sepolicy;
+$bin/sepolicy-inject -s init -t vendor_file -c file -p mounton -P sepolicy;
+$bin/sepolicy-inject -s modprobe -t rootfs -c system -p module_load -P sepolicy;
+$bin/sepolicy-inject -s msm_irqbalanced -t rootfs -c file -p getattr,read,open -P sepolicy;
+$bin/sepolicy-inject -s hal_perf_default -t rootfs -c file -p getattr,read,open -P sepolicy;
+
+# sepolicy_debug
+$bin/sepolicy-inject -s init -t rootfs -c file -p execute_no_trans,mounton -P sepolicy_debug;
+$bin/sepolicy-inject -s init -t rootfs -c system -p module_load -P sepolicy_debug;
+$bin/sepolicy-inject -s init -t system_file -c file -p mounton -P sepolicy_debug;
+$bin/sepolicy-inject -s init -t vendor_configs_file -c file -p mounton -P sepolicy_debug;
+$bin/sepolicy-inject -s init -t vendor_file -c file -p mounton -P sepolicy_debug;
+$bin/sepolicy-inject -s modprobe -t rootfs -c system -p module_load -P sepolicy_debug;
+$bin/sepolicy-inject -s msm_irqbalanced -t rootfs -c file -p getattr,read,open -P sepolicy_debug;
+$bin/sepolicy-inject -s hal_perf_default -t rootfs -c file -p getattr,read,open -P sepolicy_debug;
+
+# Give modules in ramdisk appropriate permissions to allow them to be loaded
+find $ramdisk/modules -type f -exec chmod 644 {} \;
+
 # end ramdisk changes
 
 write_boot;
