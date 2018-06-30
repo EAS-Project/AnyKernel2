@@ -40,7 +40,7 @@ on property:sys.post_boot.parsed=1
     write /sys/devices/system/cpu/cpu2/cpufreq/schedutil/iowait_boost_enable 0
 
     # Enable input boost configuration
-    write /sys/module/cpu_boost/parameters/input_boost_freq "0:1036800 2:7500000"
+    write /sys/module/cpu_boost/parameters/input_boost_freq "0:1036800 2:750000"
     write /sys/module/cpu_boost/parameters/dynamic_stune_boost 1
     write /sys/module/cpu_boost/parameters/input_boost_ms 100
 
