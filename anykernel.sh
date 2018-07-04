@@ -44,24 +44,20 @@ rm $ramdisk/init.oem.engineermode.sh
 insert_line init.rc "init.renderzenith.rc" after "import /init.environ.rc" "import /init.renderzenith.rc\n";
 
 # sepolicy
-$bin/sepolicy-inject -s init -t rootfs -c file -p execute_no_trans -P sepolicy;
-$bin/sepolicy-inject -s init -t rootfs -c system -p module_load -P sepolicy;
-$bin/sepolicy-inject -s init -t system_file -c file -p mounton -P sepolicy;
-$bin/sepolicy-inject -s init -t vendor_configs_file -c file -p mounton -P sepolicy;
-$bin/sepolicy-inject -s init -t vendor_file -c file -p mounton -P sepolicy;
-$bin/sepolicy-inject -s modprobe -t rootfs -c system -p module_load -P sepolicy;
-$bin/sepolicy-inject -s msm_irqbalanced -t rootfs -c file -p getattr,read,open -P sepolicy;
-$bin/sepolicy-inject -s hal_perf_default -t rootfs -c file -p getattr,read,open -P sepolicy;
+$bin/magiskpolicy --load sepolicy --save sepolicy \
+    "allow init rootfs file execute_no_trans" \
+    "allow { init modprobe } rootfs system module_load" \
+    "allow init { system_file vendor_file vendor_configs_file } file mounton" \
+    "allow { msm_irqbalanced hal_perf_default } rootfs file { getattr read open } " \
+    ;
 
 # sepolicy_debug
-$bin/sepolicy-inject -s init -t rootfs -c file -p execute_no_trans -P sepolicy_debug;
-$bin/sepolicy-inject -s init -t rootfs -c system -p module_load -P sepolicy_debug;
-$bin/sepolicy-inject -s init -t system_file -c file -p mounton -P sepolicy_debug;
-$bin/sepolicy-inject -s init -t vendor_configs_file -c file -p mounton -P sepolicy_debug;
-$bin/sepolicy-inject -s init -t vendor_file -c file -p mounton -P sepolicy_debug;
-$bin/sepolicy-inject -s modprobe -t rootfs -c system -p module_load -P sepolicy_debug;
-$bin/sepolicy-inject -s msm_irqbalanced -t rootfs -c file -p getattr,read,open -P sepolicy_debug;
-$bin/sepolicy-inject -s hal_perf_default -t rootfs -c file -p getattr,read,open -P sepolicy_debug;
+$bin/magiskpolicy --load sepolicy_debug --save sepolicy_debug \
+    "allow init rootfs file execute_no_trans" \
+    "allow { init modprobe } rootfs system module_load" \
+    "allow init { system_file vendor_file vendor_configs_file } file mounton" \
+    "allow { msm_irqbalanced hal_perf_default } rootfs file { getattr read open } " \
+    ;
 
 # Remove recovery service so that TWRP isn't overwritten
 remove_section init.rc "service flash_recovery" ""
