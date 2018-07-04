@@ -19,19 +19,20 @@ on late-fs
 
 on boot
 	# Bind mount modules and custom system blobs
-	mount auto /WCNSS_qcom_cfg.ini /system/vendor/etc/wifi/WCNSS_qcom_cfg.ini bind
-	mount auto /perfboostsconfig.xml /system/vendor/etc/perf/perfboostsconfig.xml bind
-	mount auto /msm_irqbalance.conf /system/vendor/etc/msm_irqbalance.conf bind
-	mount auto /modules/system/lib/modules/br_netfilter.ko /system/lib/modules/br_netfilter.ko bind
-	mount auto /modules/system/lib/modules/mpq-adapter.ko /system/lib/modules/mpq-adapter.ko bind
-	mount auto /modules/system/lib/modules/mpq-dmx-hw-plugin.ko /system/lib/modules/mpq-dmx-hw-plugin.ko bind
-	mount auto /modules/system/vendor/lib/modules/msm_11ad_proxy.ko /system/lib/modules/msm_11ad_proxy.ko bind
-	mount auto /modules/system/lib/modules/tspp.ko /system/lib/modules/tspp.ko bind
-	mount auto /modules/system/vendor/lib/modules/wil6210.ko /system/lib/modules/wil6210.ko bind
-	mount auto /modules/system/lib/modules/wlan.ko /system/lib/modules/qca_cld3/qca_cld3_wlan.ko bind
-	mount auto /modules/system/vendor/lib/modules/msm_11ad_proxy.ko /system/vendor/lib/modules/msm_11ad_proxy.ko bind
-	mount auto /modules/system/vendor/lib/modules/wil6210.ko /system/vendor/lib/modules/wil6210.ko bind
-	mount auto /modules/system/lib/modules/wlan.ko /system/vendor/lib/modules/qca_cld3_wlan.ko bind
+	mount auto /WCNSS_qcom_cfg.ini /vendor/etc/wifi/WCNSS_qcom_cfg.ini bind
+	mount auto /perfboostsconfig.xml /vendor/etc/perf/perfboostsconfig.xml bind
+	mount auto /msm_irqbalance.conf /vendor/etc/msm_irqbalance.conf bind
+	mount auto /modules/br_netfilter.ko /system/lib/modules/br_netfilter.ko bind
+	mount auto /modules/mpq-adapter.ko /system/lib/modules/mpq-adapter.ko bind
+	mount auto /modules/mpq-dmx-hw-plugin.ko /system/lib/modules/mpq-dmx-hw-plugin.ko bind
+	mount auto /modules/rdbg.ko /system/lib/modules/rdbg.ko bind
+	mount auto /modules/tspp.ko /system/lib/modules/tspp.ko bind
+	mount auto /modules/msm_11ad_proxy.ko /system/lib/modules/msm_11ad_proxy.ko bind
+	mount auto /modules/msm_11ad_proxy.ko /vendor/lib/modules/msm_11ad_proxy.ko bind
+	mount auto /modules/wil6210.ko /system/lib/modules/wil6210.ko bind
+	mount auto /modules/wil6210.ko /vendor/lib/modules/wil6210.ko bind
+	mount auto /modules/wlan.ko /system/lib/modules/qca_cld3/qca_cld3_wlan.ko bind
+	mount auto /modules/wlan.ko /vendor/lib/modules/qca_cld3_wlan.ko bind
 
 # update cpusets now that processors are up
 	write /dev/cpuset/top-app/cpus 0-7

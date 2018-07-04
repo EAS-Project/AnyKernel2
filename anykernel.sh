@@ -29,11 +29,7 @@ ramdisk_compression=auto;
 ## AnyKernel file attributes
 # set permissions/ownership for included ramdisk files
 chmod -R 750 $ramdisk/*;
-cp -f /tmp/anykernel/system/vendor/etc/msm_irqbalance.conf $ramdisk/
-cp -f /tmp/anykernel/system/vendor/etc/perf/perfboostsconfig.xml $ramdisk/
-chmod 644 $ramdisk/perfboostsconfig.xml
-chmod 644 $ramdisk/msm_irqbalance.conf
-find $ramdisk/modules -type f -exec chmod 644 {} \;
+find $ramdisk -type f -exec chmod 644 {} \;
 chown -R root:root $ramdisk/*;
 
 
@@ -84,7 +80,7 @@ remove_section init.oem.debug.rc "service dumpstate_log" "seclabel"
 remove_section init.oem.debug.rc "service oemasserttip" "disabled"
 
 # Remove packet filtering from WCNSS_qcom_cfg.ini
-cp -pf /system/vendor/etc/wifi/WCNSS_qcom_cfg.ini $ramdisk/WCNSS_qcom_cfg.ini
+cp -pf /vendor/etc/wifi/WCNSS_qcom_cfg.ini $ramdisk/WCNSS_qcom_cfg.ini
 remove_line WCNSS_qcom_cfg.ini g_enable_packet_filter_bitmap
 echo "gDisablePacketFilter=1" > $ramdisk/temp.ini
 cat $ramdisk/WCNSS_qcom_cfg.ini >> $ramdisk/temp.ini
