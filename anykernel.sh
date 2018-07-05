@@ -41,7 +41,15 @@ rm $ramdisk/init.oem.early_boot.sh
 rm $ramdisk/init.oem.engineermode.sh
 
 # init.rc
-insert_line init.rc "init.renderzenith.rc" after "import /init.environ.rc" "import /init.renderzenith.rc\n";
+remove_line init.rc "import /init.renderzenith.rc"
+insert_line init.rc "/renderzenith/init.renderzenith.rc" after "import /init.environ.rc" "import /renderzenith/init.renderzenith.rc\n";
+
+# Remove deprecated files
+rm $ramdisk/WCNSS_qcom_cfg.ini
+rm $ramdisk/perfboostsconfig.xml
+rm $ramdisk/msm_irqbalance.conf
+rm $ramdisk/init.renderzenith.rc
+rm -r $ramdisk/modules
 
 # sepolicy
 $bin/magiskpolicy --load sepolicy --save sepolicy \
@@ -76,14 +84,14 @@ remove_section init.oem.debug.rc "service dumpstate_log" "seclabel"
 remove_section init.oem.debug.rc "service oemasserttip" "disabled"
 
 # Remove packet filtering from WCNSS_qcom_cfg.ini
-cp -pf /vendor/etc/wifi/WCNSS_qcom_cfg.ini $ramdisk/WCNSS_qcom_cfg.ini
+cp -pf /vendor/etc/wifi/WCNSS_qcom_cfg.ini $ramdisk/renderzenith/WCNSS_qcom_cfg.ini
 remove_line WCNSS_qcom_cfg.ini g_enable_packet_filter_bitmap
-echo "gDisablePacketFilter=1" > $ramdisk/temp.ini
-cat $ramdisk/WCNSS_qcom_cfg.ini >> $ramdisk/temp.ini
-mv $ramdisk/temp.ini $ramdisk/WCNSS_qcom_cfg.ini
+echo "gDisablePacketFilter=1" > $ramdisk/renderzenith/temp.ini
+cat $ramdisk/renderzenith/WCNSS_qcom_cfg.ini >> $ramdisk/renderzenith/temp.ini
+mv $ramdisk/renderzenith/temp.ini $ramdisk/renderzenith/WCNSS_qcom_cfg.ini
 
 # Remove 
-replace_line $ramdisk/WCNSS_qcom_cfg.ini "gHwFilterMode" "gHwFilterMode=0"
+replace_line $ramdisk/renderzenith/WCNSS_qcom_cfg.ini "gHwFilterMode" "gHwFilterMode=0"
 
 # end ramdisk changes
 
