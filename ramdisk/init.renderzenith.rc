@@ -43,8 +43,8 @@ on boot
 # set default schedTune value for foreground/top-app (only affects EAS)
 	write /dev/stune/foreground/schedtune.prefer_idle 1
 	write /dev/stune/top-app/schedtune.prefer_idle 1
-	write /dev/stune/top-app/schedtune.boost 0
-	write /dev/stune/top-app/schedtune.dynamic_boost 1
+	write /dev/stune/top-app/schedtune.boost 1
+	write /dev/stune/top-app/schedtune.dynamic_boost 0
 
 on property:sys.post_boot.parsed=1
 # Adjust LMK Values
@@ -63,10 +63,8 @@ on property:sys.post_boot.parsed=1
 
 # Enable input boost configuration
 	write /sys/module/cpu_boost/parameters/input_boost_freq "0:1036800"
-	write /sys/module/cpu_boost/parameters/dynamic_stune_boost 1
-	write /sys/module/cpu_boost/parameters/input_boost_ms 80
-	# Disable input boost
-	#write /sys/module/cpu_boost/parameters/input_boost_enabled 0
+	write /sys/module/cpu_boost/parameters/dynamic_stune_boost 0
+	write /sys/module/cpu_boost/parameters/input_boost_ms 150
 
 # MISC
 	write /sys/sweep2sleep/sweep2sleep 0
