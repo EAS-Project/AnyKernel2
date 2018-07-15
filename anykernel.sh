@@ -94,6 +94,12 @@ mv $ramdisk/renderzenith/temp.ini $ramdisk/renderzenith/WCNSS_qcom_cfg.ini
 # Remove 
 replace_line $ramdisk/renderzenith/WCNSS_qcom_cfg.ini "gHwFilterMode" "gHwFilterMode=0"
 
+# Kill init's search for Treble split sepolicy if Magisk is not present
+# This will force init to load the monolithic sepolicy at /
+if [ ! -d .backup ]; then
+    sed -i 's;selinux/plat_sepolicy.cil;selinux/plat_sepolicy.xxx;g' init;
+fi;
+
 # end ramdisk changes
 
 write_boot;
