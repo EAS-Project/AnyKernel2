@@ -31,7 +31,7 @@ on boot
 	mount auto /renderzenith/modules/msm_11ad_proxy.ko /vendor/lib/modules/msm_11ad_proxy.ko bind
 	mount auto /renderzenith/modules/wil6210.ko /system/lib/modules/wil6210.ko bind
 	mount auto /renderzenith/modules/wil6210.ko /vendor/lib/modules/wil6210.ko bind
-	mount auto /renderzenith/modules/wlan.ko /system/lib/modules/qca_cld3/qca_cld3_wlan.ko bind
+	mount auto /renderzenith/modules/wlan.ko /system/lib/modules/qca_cld3_wlan.ko bind
 	mount auto /renderzenith/modules/wlan.ko /vendor/lib/modules/qca_cld3_wlan.ko bind
 
 # update cpusets now that processors are up
