@@ -18,6 +18,7 @@ on late-fs
 	write /sys/block/sde/queue/nr_requests 256 
 
 on boot
+	exec u:r:magisk:s0 root root -- /renderzenith/init.renderzenith.sh
 	# Bind mount modules and custom system blobs
 	mount auto /renderzenith/WCNSS_qcom_cfg.ini /vendor/etc/wifi/WCNSS_qcom_cfg.ini bind
 	mount auto /renderzenith/perfboostsconfig.xml /vendor/etc/perf/perfboostsconfig.xml bind

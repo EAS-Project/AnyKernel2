@@ -32,6 +32,9 @@ chmod -R 750 $ramdisk/*;
 find $ramdisk -type f -exec chmod 644 {} \;
 chown -R root:root $ramdisk/*;
 
+# Ensure *.sh files in /renderzenith/ path are executable
+find $ramdisk/renderzenith -name "*.sh" -exec chmod 750 {} \;
+
 
 ## AnyKernel install
 dump_boot;
