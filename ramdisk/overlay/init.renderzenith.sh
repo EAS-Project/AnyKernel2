@@ -18,8 +18,8 @@ sleep 25;
 	echo 0 > /sys/devices/system/cpu/cpufreq/policy4/schedutil/hispeed_freq
 
 # Input boost and stune configuration
-	echo "0:1056000 1:0 2:0 3:0 4:1056000 5:0 6:0 7:0" > /sys/module/cpu_boost/parameters/input_boost_freq
-	echo 450 > /sys/module/cpu_boost/parameters/input_boost_ms
+	echo "0:1056000 1:0 2:0 3:0 4:0 5:0 6:0 7:0" > /sys/module/cpu_boost/parameters/input_boost_freq
+	echo 600 > /sys/module/cpu_boost/parameters/input_boost_ms
 	echo 15 > /sys/module/cpu_boost/parameters/dynamic_stune_boost
 
 # Disable Boost_No_Override
@@ -33,6 +33,9 @@ sleep 25;
 
 # Enable PEWQ
 	echo Y > /sys/module/workqueue/parameters/power_efficient
+
+# Disable Touchboost
+	echo 0 > /sys/module/msm_performance/parameters/touchboost
 
 # Adjust SCHED Features
 	echo NO_EAS_USE_NEED_IDLE > /sys/kernel/debug/sched_features
