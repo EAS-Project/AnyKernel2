@@ -39,15 +39,8 @@ sleep 25;
 # Disable Touchboost
 	echo 0 > /sys/module/msm_performance/parameters/touchboost
 
-# Adjust SCHED Features
-	echo NO_EAS_USE_NEED_IDLE > /sys/kernel/debug/sched_features
-	echo TTWU_QUEUE > /sys/kernel/debug/sched_features
-
 # Disable CAF task placement for Big Cores
 	echo 0 > /proc/sys/kernel/sched_walt_rotate_big_tasks
-
-# Disable Autogrouping
-	echo 0 > /proc/sys/kernel/sched_autogroup_enabled
 
 # Setup EAS cpusets values for better load balancing
 	echo 0-7 > /dev/cpuset/top-app/cpus
