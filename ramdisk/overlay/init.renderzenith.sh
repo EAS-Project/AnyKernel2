@@ -1,6 +1,6 @@
 #!/system/bin/sh 
 
-sleep 25;
+sleep 35;
 
 # Applying RenderZenith Settings 
 
