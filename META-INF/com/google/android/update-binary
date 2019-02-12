@@ -81,7 +81,7 @@ if [ -f /tmp/anykernel/version ]; then
 fi;
 ui_print " ";
 ui_print " ";
-ui_print "          for the OP6!";
+ui_print "          for the OP6/T!";
 ui_print " ";
 ui_print " ";
 ui_print " ";
