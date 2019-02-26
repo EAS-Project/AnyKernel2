@@ -1,8 +1,18 @@
 #!/system/bin/sh 
 
-sleep 35;
+sleep 20;
 
 # Applying RenderZenith Settings 
+
+# Tune Core_CTL for proper task placement
+	echo 0 > /sys/devices/system/cpu/cpu0/core_ctl/enable
+	echo 0 > /sys/devices/system/cpu/cpu4/core_ctl/enable
+
+# Disable CAF task placement for Big Cores
+	echo 0 > /proc/sys/kernel/sched_walt_rotate_big_tasks
+
+# Set default schedTune value for foreground/top-app
+	echo 1 > /dev/stune/top-app/schedtune.boost
 
 # Setup Schedutil Governor
 	echo "schedutil" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
@@ -28,24 +38,6 @@ sleep 35;
 # Dynamic Stune Boost during sched_boost
 	echo 50 > /dev/stune/top-app/schedtune.sched_boost
 
-# Disable Boost_No_Override
-	echo 0 > /dev/stune/foreground/schedtune.sched_boost_no_override
-	echo 0 > /dev/stune/top-app/schedtune.sched_boost_no_override
-
-# Set default schedTune value for foreground/top-app
-	echo 1 > /dev/stune/foreground/schedtune.prefer_idle
-	echo 0 > /dev/stune/top-app/schedtune.boost
-	echo 1 > /dev/stune/top-app/schedtune.prefer_idle
-
-# Enable PEWQ
-	echo Y > /sys/module/workqueue/parameters/power_efficient
-
-# Disable Touchboost
-	echo 0 > /sys/module/msm_performance/parameters/touchboost
-
-# Disable CAF task placement for Big Cores
-	echo 0 > /proc/sys/kernel/sched_walt_rotate_big_tasks
-
 # Setup EAS cpusets values for better load balancing
 	echo 0-7 > /dev/cpuset/top-app/cpus
 	# Since we are not using core rotator, lets load balance
@@ -59,14 +51,3 @@ sleep 35;
 # Adjust Read Ahead
 	echo 128 > /sys/block/sda/queue/read_ahead_kb
 	echo 128 > /sys/block/dm-0/queue/read_ahead_kb
-	
-# Tune Core_CTL for proper task placement
-	echo "0 0 0 0" > /sys/devices/system/cpu/cpu0/core_ctl/busy_down_thres
-	echo "0 0 0 0" > /sys/devices/system/cpu/cpu0/core_ctl/busy_up_thres
-	echo 1 > /sys/devices/system/cpu/cpu0/core_ctl/min_cpus
-	echo 4294967295 > /sys/devices/system/cpu/cpu0/core_ctl/task_thres
-
-	echo "0 0 0 0" > /sys/devices/system/cpu/cpu4/core_ctl/busy_down_thres
-	echo "0 0 0 0" > /sys/devices/system/cpu/cpu4/core_ctl/busy_up_thres
-	echo 1 > /sys/devices/system/cpu/cpu4/core_ctl/min_cpus
-	echo 4294967295 > /sys/devices/system/cpu/cpu4/core_ctl/task_thres
