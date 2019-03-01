@@ -1,0 +1,16 @@
+    ##START_RZ
+
+    # Enable Schedutil cpufreq governor
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor schedutil
+    write /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor schedutil
+
+    # Tweak SchedTune
+    write /dev/stune/top-app/schedtune.boost 0
+    write /dev/stune/top-app/schedtune.prefer_idle 1
+    write /dev/stune/top-app/schedtune.sched_boost 1
+    #write /dev/stune/foreground/schedtune.prefer_idle 1
+
+    # Tweak cpuset
+    write /dev/cpuset/restricted/cpus 0-3
+
+    ##END_RZ

@@ -33,6 +33,15 @@ ramdisk_compression=auto;
 chmod -R 750 $ramdisk/*;
 chown -R root:root $ramdisk/*;
 
+## begin vendor changes
+mount -o rw,remount -t auto /vendor >/dev/null;
+
+# Cleanup previous performance additions
+remove_section /vendor/etc/init/hw/init.target.performance.rc "##START_RZ" "##END_RZ"
+
+# Add performance tweaks
+append_file /vendor/etc/init/hw/init.target.performance.rc "R4ND0MSTR1NG" init.target.performance.rc
+
 
 ## AnyKernel install
 dump_boot;
