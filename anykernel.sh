@@ -22,16 +22,38 @@ ramdisk_compression=auto;
 # import patching functions/variables - see for reference
 . /tmp/anykernel/tools/ak2-core.sh;
 
-
 ## AnyKernel file attributes
 # set permissions/ownership for included ramdisk files
 chmod -R 750 $ramdisk/*;
 chown -R root:root $ramdisk/*; 
 
+## begin vendor changes
+mount -o rw,remount -t auto /vendor >/dev/null;
+
+cp -rf /tmp/anykernel/patch/init.renderzenith.sh /vendor/etc/init/hw/;
+set_perm 0 0 0644 /vendor/etc/init/hw/init.renderzenith.sh;
+
+# Make a backup of init.target.rc
+restore_file /vendor/etc/init/hw/init.target.rc;
+backup_file /vendor/etc/init/hw/init.target.rc;
+
+# Do work #2
+replace_string /vendor/etc/init/hw/init.target.rc "write /dev/stune/top-app/schedtune.colocate 0" "write /dev/stune/top-app/schedtune.colocate 1" "write /dev/stune/top-app/schedtune.colocate 0";
+
+# Add performance tweaks
+append_file /vendor/etc/init/hw/init.target.rc "R4ND0MSTR1NG" init.target.rc;
+
+# Make a backup of msm_irqbalance.conf
+backup_file /vendor/etc/msm_irqbalance.conf;
+
+cp -rf /tmp/anykernel/patch/msm_irqbalance.conf /vendor/etc/msm_irqbalance.conf;
+set_perm 0 0 0644 /vendor/etc/msm_irqbalance.conf;
 
 ## AnyKernel install
 dump_boot;
 
+# Clean up other kernels' ramdisk overlay files
+rm -rf $ramdisk/overlay;
 
 # Add skip_override parameter to cmdline so user doesn't have to reflash Magisk
 if [ -d $ramdisk/.backup ]; then
@@ -40,17 +62,6 @@ if [ -d $ramdisk/.backup ]; then
 else
   patch_cmdline "skip_override" "";
 fi;  
-
-
-# Clean up other kernels' ramdisk overlay files
-#rm -rf $ramdisk/overlay;
-
-
-# Add our ramdisk files if Magisk is installed
-#if [ -d $ramdisk/.backup ]; then
-#  mv /tmp/anykernel/overlay $ramdisk;
-#fi
-
 
 # Install the boot image
 write_boot;
