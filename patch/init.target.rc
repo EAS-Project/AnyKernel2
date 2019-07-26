@@ -4,7 +4,7 @@
 on init
 # Set default schedTune value for foreground/top-app a init
 	write /dev/stune/foreground/schedtune.prefer_idle 1
-	write /dev/stune/top-app/schedtune.boost 10
+#	write /dev/stune/top-app/schedtune.boost 10
 	write /dev/stune/top-app/schedtune.prefer_idle 1
 	
 on post-fs
@@ -30,11 +30,11 @@ on property:vendor.post_boot.parsed=1
 	write /dev/stune/top-app/schedtune.boost 0
 
 # Stune configuration
-	write /sys/module/cpu_boost/parameters/dynamic_stune_boost 20
+	write /sys/module/cpu_boost/parameters/dynamic_stune_boost 15
 	write /sys/module/cpu_boost/parameters/dynamic_stune_boost_ms 1500
 
 # Dynamic Stune Boost during sched_boost
-	write /dev/stune/top-app/schedtune.sched_boost 20
+	write /dev/stune/top-app/schedtune.sched_boost 15
 
 # Input boost 
 	write /sys/module/cpu_boost/parameters/input_boost_freq "0:1056000 1:0 2:0 3:0 4:1056000 5:0 6:0 7:0"
