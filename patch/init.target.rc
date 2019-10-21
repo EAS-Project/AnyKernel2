@@ -59,7 +59,7 @@ on property:vendor.post_boot.parsed=1
 	write /dev/cpuset/top-app/cpus 0-7
 	# Since we are not using core rotator, lets load balance
 	write /dev/cpuset/foreground/cpus 0-3,6-7
-	write /dev/cpuset/background/cpus 0-1
+	write /dev/cpuset/background/cpus 0-3
 	write /dev/cpuset/system-background/cpus 0-3
 
 # For better screen off idle
